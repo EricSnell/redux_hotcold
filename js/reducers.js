@@ -1,5 +1,4 @@
 var actions = require('./actions');
-
 /**
  * []
  * @param  {[type]} state  [description]
@@ -39,7 +38,7 @@ var hotColdReducer = function(state, action) {
 
     if (state.hotness === 'Got it!') {
       //Dispatch action to post counter
-      //fetchPostScore(this.props.counter);
+      this.props.dispatch(fetchPostScore(this.state.counter));
       return state;
     }
 
@@ -93,18 +92,26 @@ var hotColdReducer = function(state, action) {
 };
 
 
-var fetchPostScore = function() {
+var fetchPostScore = function(counter) {
   return function(dispatch) {
-    var url = 'https://localhost:8000/scores';
+    var url = 'http://localhost:8080/scores';
     return fetch(url, {
-      {
-      	method: 'post',
-      	body: JSON.stringify({
-      		email: document.getElementById('email').value
-      		answer: document.getElementById('answer').value
-      	})
-      });
-    }
+    	method: 'post',
+    	body: JSON.stringify({
+    		score: counter
+    	})
+    })
+    .then(function(response) {
+      console.log(response);
+      if (response.status < 200 || response.status >= 300) {
+        var error = new Error(response.statusText)
+        error.response = response;
+        return response.json(); 
+      }
+    })
+  }
+}
+
 
 
 exports.hotColdReducer = hotColdReducer;
