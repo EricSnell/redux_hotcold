@@ -38,8 +38,11 @@ var hotColdReducer = function(state, action) {
     }
 
     if (state.hotness === 'Got it!') {
+      //Dispatch action to post counter
+      //fetchPostScore(this.props.counter);
       return state;
     }
+
 
     if (action.guess > 0 && action.guess <= 100) {
       var difference = Math.abs(state.correct - action.guess);
@@ -59,6 +62,7 @@ var hotColdReducer = function(state, action) {
         hotness = 'ALEX HOT';
       } else {
         hotness = 'Got it!';
+
       }
 
       var oldDiff = Math.abs(state.correct - state.guess);
@@ -87,5 +91,20 @@ var hotColdReducer = function(state, action) {
   }
   return state;
 };
+
+
+var fetchPostScore = function() {
+  return function(dispatch) {
+    var url = 'https://localhost:8000/scores';
+    return fetch(url, {
+      {
+      	method: 'post',
+      	body: JSON.stringify({
+      		email: document.getElementById('email').value
+      		answer: document.getElementById('answer').value
+      	})
+      });
+    }
+
 
 exports.hotColdReducer = hotColdReducer;
